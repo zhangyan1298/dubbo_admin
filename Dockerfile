@@ -2,10 +2,11 @@ FROM maven:3-jdk-8
 RUN git clone --depth 1 https://github.com/apache/incubator-dubbo-ops.git /source
 WORKDIR /source
 RUN mvn clean install
-RUN mvn --projects dubbo-admin-backend 
+
   
   
 FROM tomcat:8.0-jre8
 RUN rm -rf /usr/local/tomcat/webapps/
-COPY --from=0 /source/target/*.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=0 /root/.m2/repository/org/apache/dubbo-admin-backend/0.0.1-SNAPSHOT/*.jar .
+RUN java -jar dubbo-admin-backend-0.0.1-SNAPSHOT.jar
 EXPOSE 8080
