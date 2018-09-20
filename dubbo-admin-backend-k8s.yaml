@@ -1,0 +1,40 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dubbo-admin-backend-svc
+  labels:
+    app: dubbo-admin-backend-svc
+spec:
+  ports:
+  - port: 8080
+    name: server
+  type: NodePort
+  selector:
+    app: dubbo-backend-admin
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: dubbo-backend-admin
+spec:
+  replicas: 1
+  selector:
+   matchLabels:
+    app: dubbo-backend-admin
+  template:
+    metadata:
+      labels:
+        app: dubbo-backend-admin
+    spec:
+      nodeSelector:
+        zk: zk-2
+      containers:
+      - name: dubbo-admin-backend
+        imagePullPolicy: Always
+        image: dockeryanxiao/dubbo-admin-backend:0.0.1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: dubbo.registry.address
+          value: zookeeper://zk-2-svc:2181
