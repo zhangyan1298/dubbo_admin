@@ -7,5 +7,6 @@ RUN mvn clean install
   
 FROM tomcat:8.0-jre8
 RUN rm -rf /usr/local/tomcat/webapps/
-COPY --from=0 target/*.war  /usr/local/tomcat/webapps/ROOT
+COPY /root/.m2/repository/org/apache/dubbo-admin-backend/0.0.1-SNAPSHOT/*.jar .
+RUN nohup java -jar 
 EXPOSE 8080
